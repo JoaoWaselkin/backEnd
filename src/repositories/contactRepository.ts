@@ -10,7 +10,7 @@ export class ContactRepository {
 }
 
   async getAllContacts(): Promise<Contact[]> {
-    const { rows } = await this.pool.query("SELECT * FROM contactos");
+    const { rows } = await this.pool.query("SELECT name, email, image, telefone  FROM contactos");
     return rows;
 }
 
