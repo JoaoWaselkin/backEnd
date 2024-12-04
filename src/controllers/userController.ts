@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import { UserRepository } from '../repositories/userRepository'
+import { isValidEmail } from '../helpers/validationHelper';
+
 
 const userRepo = new UserRepository();
 
@@ -47,5 +49,22 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
   } catch (error) {
     console.error(error);
     res.status(404).json({ message: `User com ID ${id} não encontrado` });
+  }
+};
+
+export const addUser = async (req: Request, res: Response) => {
+  const { name, email, passwordHash } = req.body;
+
+  // Aqui vai validar o Helper
+  if (!isValidEmail(email)) {
+    return res.status(400).json({ error: 'Email inválido' });
+  }
+
+  try {
+    const User = await userRepo.addUser(name, email, passwordHash);
+    res.status(201).json(User);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erro ao adicionar usuário' });
   }
 };
