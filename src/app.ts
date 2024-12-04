@@ -1,11 +1,13 @@
 import express from 'express';
 import contactRoutes from './routes/contactRoutes';
+import userRoutes from './routes/userRoutes';
 
 const app = express();
 
 app.use(express.json());
 
-app.use('/api', contactRoutes);
+app.use('/api', contactRoutes, userRoutes);
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
