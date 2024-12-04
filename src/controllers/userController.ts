@@ -14,10 +14,10 @@ export const getUsers = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const postUsers = async (req: Request, res: Response): Promise<void> => {
-  const { name, email } = req.body;
+  const { name, email, passwordHash } = req.body;
 
   try {
-    const newUser = await userRepo.addUser(name, email);
+    const newUser = await userRepo.addUser(name, email, passwordHash);
     res.status(201).json(newUser);
   } catch (error) {
     console.error(error);
