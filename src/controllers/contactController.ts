@@ -8,7 +8,7 @@ const contactRepo = new ContactRepository();
 
 export const getContacts = async (req: Request, res: Response): Promise<void> => {
   try {
-    const contacts = await ContactService.listContact();
+    const contacts = await contactRepo.getAllContacts();
     res.json(contacts);
   } catch (error) {
     console.error(error);
