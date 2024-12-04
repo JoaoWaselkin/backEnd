@@ -1,11 +1,14 @@
 import { Request, Response } from 'express';
 import { ContactRepository } from '../repositories/contactRepository'
+import { isValidEmail } from '../helpers/validationHelper';
+import { ContactService } from '../services/userService';
 
 const contactRepo = new ContactRepository();
 
+
 export const getContacts = async (req: Request, res: Response): Promise<void> => {
   try {
-    const contacts = await contactRepo.getAllContacts();
+    const contacts = await ContactService.listContact();
     res.json(contacts);
   } catch (error) {
     console.error(error);
@@ -49,3 +52,21 @@ export const deleteContact = async (req: Request, res: Response): Promise<void> 
     res.status(404).json({ message: `Contato com ID ${id} não encontrado` });
   }
 };
+
+export const addContact = async (req: Request, res: Response) => {
+  const { name, email, telefone, image } = req.body;
+
+  // Validando o e-mail com o helper
+  if (!isValidEmail(email)) {
+    return res.status(400).json({ error: 'Email inválido' });
+  }
+
+  try {
+    const contact = await contactRepo.addContact(name, email, telefone, email);
+    res.status(201).json(contact);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erro ao adicionar usuário' });
+  }
+};
+
